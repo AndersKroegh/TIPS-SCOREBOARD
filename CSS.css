@@ -1,0 +1,80 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 20px;
+}
+
+.scoreboard {
+  max-width: 900px;
+  margin: auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.scoreboard table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.scoreboard th, .scoreboard td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.scoreboard th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.scoreboard tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.scoreboard tr:hover {
+  background-color: #f1f1f1;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+button {
+  padding: 10px 15px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button.add {
+  background-color: #4CAF50;
+  color: white;
+}
+
+button.remove {
+  background-color: #f44336;
+  color: white;
+}
+
+button.reset {
+  background-color: #2196F3;
+  color: white;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+select {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}

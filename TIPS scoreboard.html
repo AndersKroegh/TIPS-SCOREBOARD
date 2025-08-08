@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIPS Scoreboard</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; background-color: #fafafa; }
+  h1 { text-align: center; }
+  table { border-collapse: collapse; margin: 20px auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: white; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+  th { background-color: #4CAF50; color: white; }
+  input[type=text] { width: 100px; padding: 4px; border-radius: 4px; border: 1px solid #ccc; }
+  select { width: 60px; padding: 2px; border-radius: 4px; border: 1px solid #ccc; }
+  .total { font-weight: bold; background-color: #e0ffe0; }
+  .controlBtn { cursor: pointer; font-size: 20px; padding: 4px 8px; background-color: #4CAF50; color: white; border: none; border-radius: 50%; margin-left: 5px; }
+  .controlBtn:hover { background-color: #45a049; }
+  #removePlayerBtn { background-color: #e74c3c; }
+  #removePlayerBtn:hover { background-color: #c0392b; }
+</style>
+</head>
+<body>
+<h1>TIPS Scoreboard 
+  <button id="addPlayerBtn" class="controlBtn">+</button>
+  <button id="removePlayerBtn" class="controlBtn">-</button>
+</h1>
+
+<table id="scoreTable">
+  <thead>
+    <tr id="headerRow">
+      <th>Runde (kort)</th>
+      <th>Spiller 1<br><input type="text" id="player1" placeholder="Navn"></th>
+      <th>Spiller 2<br><input type="text" id="player2" placeholder="Navn"></th>
+      <th>Spiller 3<br><input type="text" id="player3" placeholder="Navn"></th>
+      <th>Spiller 4<br><input type="text" id="player4" placeholder="Navn"></th>
+    </tr>
+  </thead>
+  <tbody id="scoreBody"></tbody>
+  <tfoot>
+    <tr id="totalRow">
+      <td class="total">Total</td>
+      <td class="total" id="total1">0</td>
+      <td class="total" id="total2">0</td>
+      <td class="total" id="total3">0</td>
+      <td class="total" id="total4">0</td>
+    </tr>
+  </tfoot>
+</table>
+
+<script>
+const minPoints = 10;
+const maxPoints = 22;
+const rounds = [...Array(12).keys()].map(i => 12 - i).concat([...Array(11).keys()].map(i => i + 2));
+const scoreBody = document.getElementById('scoreBody');
+let playerCount = 4;
+
+function createSelect() {
+  const select = document.createElement('select');
+  const emptyOption = document.createElement('option');
+  emptyOption.value = '';
+  emptyOption.textContent = '';
+  select.appendChild(emptyOption);
+
+  for (let points = minPoints; points <= maxPoints; points++) {
+    const option = document.createElement('option');
+    option.value = points;
+    option.textContent = points;
+    select.appendChild(option);
+  }
+  select.addEventListener('change', updateTotals);
+  return select;
+}
+
+function buildTable() {
+  scoreBody.innerHTML = '';
+  rounds.forEach(r => {
+    const row = document.createElement('tr');
+    const roundCell = document.createElement('td');
+    roundCell.textContent = r;
+    row.appendChild(roundCell);
+
+    for (let p = 1; p <= playerCount; p++) {
+      const cell = document.createElement('td');
+      cell.appendChild(createSelect());
+      row.appendChild(cell);
+    }
+    scoreBody.appendChild(row);
+  });
+  updateTotals();
+}
+
+function updateTotals() {
+  for (let p = 1; p <= playerCount; p++) {
+    let total = 0;
+    document.querySelectorAll(`#scoreBody tr td:nth-child(${p+1}) select`).forEach(sel => {
+      if (sel.value) total += parseInt(sel.value);
+    });
+    let totalCell = document.getElementById(`total${p}`);
+    if (!totalCell) {
+      totalCell = document.createElement('td');
+      totalCell.id = `total${p}`;
+      totalCell.className = 'total';
+      document.getElementById('totalRow').appendChild(totalCell);
+    }
+    totalCell.textContent = total;
+  }
+}
+
+function addPlayer() {
+  playerCount++;
+  const headerRow = document.getElementById('headerRow');
+  const th = document.createElement('th');
+  th.innerHTML = `Spiller ${playerCount}<br><input type="text" id="player${playerCount}" placeholder="Navn">`;
+  headerRow.appendChild(th);
+  buildTable();
+}
+
+function removePlayer() {
+  if (playerCount > 1) {
+    document.getElementById('headerRow').lastElementChild.remove();
+    document.getElementById('totalRow').lastElementChild.remove();
+    playerCount--;
+    buildTable();
+  }
+}
+
+document.getElementById('addPlayerBtn').addEventListener('click', addPlayer);
+document.getElementById('removePlayerBtn').addEventListener('click', removePlayer);
+
+// Initial table
+buildTable();
+</script>
+
+</body>
+</html>
